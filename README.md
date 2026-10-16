@@ -20,53 +20,42 @@ exp1_boolean_min_tb.v	Verilog testbench
 exp1_boolean_min.vcd	VCD waveform dump generated during simulation
 
 ## Verilog Program
-module basic_gates (
-   input  wire a,
-   input  wire b,
-   output wire y_and,
-   output wire y_or,
-   output wire y_not
-);
- 
-   assign y_and = a & b;   // AND gate
-   assign y_or  = a | b;   // OR gate
-   assign y_not = ~a;      // NOT gate (inverter)
- 
+module fun (
+input wire A, 
+input wire B, 
+output wire F 
+); 
+assign F = (~A) | B ;    // F = A' + B 
 endmodule
 
 
 ## TestBench Program
-module tb2;
- 
-   reg a, b;
-   wire y_and, y_or, y_not;
- 
-   // Instantiate the design under test (DUT)
-   basic_gates uut (
-       .a(a),
-       .b(b),
-       .y_and(y_and),
-       .y_or(y_or),
-       .y_not(y_not)
-   );
- 
-   initial begin
-       // ---- VCD dump setup ----
-       $dumpfile("basic_gates.vcd");   // name of the VCD file to be generated
-       $dumpvars(0, tb2);               // dump all signals in this testbench hierarchy
- 
-       // ---- Apply all 4 input combinations ----
-       $monitor("Time=%0t a=%b b=%b | AND=%b OR=%b NOT(a)=%b", $time, a, b, y_and, y_or, y_not);
- 
-       a = 0; b = 0; #10;
-       a = 0; b = 1; #10;
-       a = 1; b = 0; #10;
-       a = 1; b = 1; #10;
- 
-       #10 $finish;
-#10;
-   end
- 
+module tb;
+    reg A, B;
+    wire F;
+    // Instantiate the design under test (DUT)
+    fun uut (
+        .A(A),
+        .B(B),
+        .F(F)
+    );
+
+    initial begin
+        // ---- VCD dump setup ----
+        $dumpfile("fun.vcd");   // name of the VCD file to be generated
+        $dumpvars(0, tb);   // dump all signals in this testbench hierarchy
+
+        // ---- Apply all 4 input combinations ----
+        $monitor("Time=%0t A=%b B=%b | F=%b", $time, A, B, F);
+
+        A = 0; B = 0; #10;
+        A = 0; B = 1; #10;
+        A = 1; B = 0; #10;
+        A = 1; B = 1; #10;
+
+        #10 $finish;
+    end
+
 endmodule
 
 
